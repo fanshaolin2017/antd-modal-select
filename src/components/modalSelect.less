@@ -1,0 +1,390 @@
+:global {
+  .ant-modal .ant-modal-content .ant-modal-body {
+    padding: 0px;
+    text-align: left;
+  }
+
+  .ant-checkbox-group {
+    height: 60px;
+    line-height: 60px;
+    font-size: 16px;
+    color: #666;
+
+    .ant-checkbox-wrapper {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .ant-checkbox {
+      width: 35px;
+      height: 35px;
+    }
+
+    .ant-checkbox+span {
+      padding-right: 30px;
+      color: #666;
+      font-weight: normal;
+    }
+
+    .ant-checkbox-inner {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: none;
+      background: url(../../static/img/invest_choice_n.png) no-repeat;
+      background-size: 20px 20px;
+      background-position: center;
+      top: 0px;
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner:after {
+      width: 10px;
+      height: 17px;
+      left: 9px;
+      top: 10px;
+      border-color: #fff;
+      border: none;
+    }
+
+    .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+    .ant-checkbox:hover .ant-checkbox-inner,
+    .ant-checkbox-input:focus+.ant-checkbox-inner {
+      border-color: #c5342a;
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background: url(../../static/img/invest_choice_y_past.png) no-repeat;
+      background-size: 20px 20px;
+      background-position: center;
+    }
+
+    .ant-checkbox-wrapper:not(:last-child) {
+      margin-right: 45px;
+    }
+
+    .ant-checkbox-disabled .ant-checkbox-inner {
+      background-color: #ddd;
+    }
+  }
+
+}
+
+.fundModalBox {
+
+  .modalTitle {
+    height: 60px;
+    border-bottom: 1px solid #dde1e6;
+    text-align: center;
+    line-height: 60px;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+
+    .modalClose {
+      background: url(../../static/img/icon_modalClose.png) no-repeat;
+      background-size: 16px;
+      background-position: 30px center;
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      cursor: pointer;
+    }
+
+    .modalSave {
+      position: absolute;
+      display: -webkit-box;
+      right: 0px;
+      top: 0px;
+
+      .modalSaveBtn {
+        font-size: 16px;
+        margin-left: 40px;
+        margin-right: 30px;
+        color: #c5342a;
+        background-color: #fff;
+        border-color: #fff;
+
+        &.none {
+          pointer-events: none !important;
+          color: #999;
+        }
+      }
+    }
+  }
+
+  .fundUlBox {
+    padding: 15px 0 55px 15px;
+    max-height: 770px;
+    min-height: 300px;
+    overflow-y: auto;
+
+    .stepUl {
+      list-style: none;
+      padding-left: 0;
+      border: none;
+
+      &:after {
+        content: '.';
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+
+      .stepLi {
+        list-style: none;
+        position: relative;
+        float: left;
+        margin: 0 15px 10px 0;
+        width: 130px;
+        height: 50px;
+        font-size: 16px;
+        color: #666;
+        text-align: center;
+        border: none;
+        border-radius: 6px;
+        background-color: #f3f3f3;
+        box-sizing: border-box;
+        overflow: hidden;
+
+        span {
+          display: table-cell;
+          vertical-align: middle;
+          white-space: normal;
+          width: 100%;
+          line-height: 50px;
+        }
+
+        .stepYes {
+          position: absolute;
+          display: none;
+          right: 0;
+          bottom: 0;
+          width: 21px;
+          height: 16px;
+          text-indent: -9999em;
+          background: url(../../static/img/screen_yes.png) no-repeat;
+          background-size: 19px 13px;
+          background-position: center;
+        }
+
+        &.on {
+          color: #c5342a;
+          background-color: #f3e5e2;
+
+          .stepYes {
+            display: block
+          }
+        }
+
+        &.disChange {
+          filter: grayscale(100%);
+          color: #999;
+          background-color: #eeeeee;
+          pointer-events: none;
+        }
+      }
+    }
+
+    &.selectUlBox {
+      max-height: 475px;
+
+      .tiptext {
+        font-size: 16px;
+        color: #faad14,
+      }
+    }
+
+    &.bigClass {
+      .stepUl {
+        .stepLi {
+          width: 400px;
+          height: 60px;
+        }
+      }
+    }
+
+    &.cpkhClass {
+      .stepUl {
+        .stepLi {
+          width: 400px;
+          height: 60px;
+        }
+      }
+    }
+
+    &.bigClass2 {
+      .stepUl {
+        .stepLi {
+          width: 625px;
+          height: 60px;
+        }
+      }
+    }
+
+    &.selfClass {
+      .stepUl {
+        .stepLi {
+          display: inline-block;
+          height: auto;
+
+          span {
+            display: block;
+          }
+        }
+      }
+    }
+
+    &.moreBigClass {
+      max-height: 700px;
+
+      .stepUl {
+        .stepLi {
+          width: 625px;
+          height: 60px;
+        }
+      }
+    }
+  }
+
+  .buttBox {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #e1e1e1;
+
+    .butt {
+      width: 50%;
+      height: 45px;
+      line-height: 45px;
+      font-size: 16px;
+      color: #c5342a;
+      border: none;
+      background-color: #fff;
+
+      &:active {
+        border: none;
+      }
+
+      &:last-child {
+        color: #fff;
+        background-color: #c5342a;
+      }
+    }
+
+    &.newButBox {
+      position: inherit;
+    }
+  }
+
+  .nextIcon {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    background-color: #fff;
+
+    span {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin: 0 auto;
+      display: block;
+      transform: translateX(-50%) rotate(-45deg);
+      -ms-transform: translateX(-50%) rotate(-45deg);
+      /* IE 9 */
+      -moz-transform: translateX(-50%) rotate(-45deg);
+      /* Firefox */
+      -webkit-transform: translateX(-50%) rotate(-45deg);
+      /* Safari 和 Chrome */
+      -o-transform: translateX(-50%) rotate(-45deg);
+      /* Opera */
+      width: 30px;
+      height: 30px;
+      border-left: 2PX solid #ddd;
+      border-bottom: 2PX solid #ddd;
+    }
+  }
+
+
+  .resetBox {
+    padding-bottom: 110px;
+    line-height: 60px;
+    font-size: 30px;
+    color: #666;
+    text-align: center;
+  }
+
+
+}
+
+.searchBar {
+  background: #fafafa;
+  padding: 20px 0px;
+
+  .searchForm {
+    margin: 0 auto;
+    width: 550px;
+  }
+
+  input {
+    width: 550px;
+    height: 50px;
+    line-height: 50px;
+    color: #333;
+    background: #fff;
+    border-radius: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+    background: #efefef;
+    border: none;
+
+    &::-webkit-input-placeholder {
+      text-align: center;
+      color: #bbb;
+    }
+  }
+
+  .searchClear {
+    background: url(../../static/img/icon_close.png) no-repeat;
+    background-size: 20px 20px;
+    width: 20px;
+    height: 20px;
+    display: block;
+    position: relative;
+    right: 10px;
+  }
+
+  &.busSearchBar {
+    background-color: #fff;
+    padding: 10px 88px 0 110px;
+
+    .searchForm {
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      height: 70px;
+      line-height: 70px;
+      border-radius: 70px;
+      font-size: 28px;
+      color: #000;
+    }
+
+    .searchIconP {
+      left: 800px;
+    }
+
+    .searchClear {
+      width: 100px;
+      height: 70px;
+      right: 0;
+      background-position: 58px center;
+      cursor: pointer;
+    }
+  }
+}

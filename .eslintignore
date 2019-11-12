@@ -1,0 +1,11 @@
+node_modules
+server
+dist
+src/pages/photoswipe
+src/pages/dian/pdff.js
+src/utils/oss-js-upload.js
+src/utils/aliyun-min-sdk.js
+src/pages/dian/jquery.cookie.js
+src/pages/simplestock/*
+src/pages/src/*
+src/utils/*
