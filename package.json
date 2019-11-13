@@ -1,16 +1,12 @@
 {
-  "name": "antd-modal-select",
-  "version": "0.0.3",
+  "name": "@crm/bpc-antd-modal-select",
+  "version": "0.0.4",
   "main": "lib/bundle.js",
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack --config webpack.prod.conf.js",
-    "build:dev": "webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "files": [
-    "dist"
-  ],
   "keywords": [
     "react"
   ],

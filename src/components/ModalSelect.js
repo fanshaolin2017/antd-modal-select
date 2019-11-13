@@ -17,7 +17,7 @@ const saveOpts = [{ label: '全选', value: '1' }];
 
 export default class ModalSelect extends Component {
   static propTypes = {
-    dataSurce: PropTypes.array.isRequired,
+    dataSource: PropTypes.array.isRequired,
     defaultValue: PropTypes.string, // select 传值
     modalSure: PropTypes.func.isRequired,
     checkAll: PropTypes.bool, // 可以选择全部
@@ -57,7 +57,7 @@ export default class ModalSelect extends Component {
     modalTitle: '证件类别',
     selectCode: '',
     resetValue: '',
-    maxLength: '',
+    maxLength: 100,
     disAbleItem: [],
     itemSize: 'normal',
     width: 600,
@@ -79,47 +79,44 @@ export default class ModalSelect extends Component {
   constructor(props) {
     super(props);
 
-    const { defaultValue, dataSurce } = props;
+    const { defaultValue, dataSource } = props;
     this.state = {
       changFlag: false,
       defaultItem: [],
       value: '',
-      selectContent: this.getNote(defaultValue, dataSurce),
-      infoArray: this.getNowArray(props, ''),
+      selectContent: this.getNote(defaultValue, dataSource),
       newNum: parseInt(Math.random() * 1000000 + 1, 10)
     };
   }
 
   componentWillMount() {
-    const { defaultValue, dataSurce } = this.props;
+    const { defaultValue, dataSource } = this.props;
     this.setState({
       defaultItem: defaultValue ? defaultValue.split(';') : [],
       changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : []),
-      selectContent: this.getNote(defaultValue, dataSurce),
-      infoArray: dataSurce
+      selectContent: this.getNote(defaultValue, dataSource),
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { defaultValue, dataSurce } = nextProps;
+    const { defaultValue, dataSource } = nextProps;
     this.setState({
       defaultItem: defaultValue ? defaultValue.split(';') : [],
       changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : []),
-      selectContent: this.getNote(defaultValue, dataSurce),
-      infoArray: this.getNowArray(nextProps, this.state.value)
+      selectContent: this.getNote(defaultValue, dataSource),
     });
   }
 
   getNowArray(props, value) {
-    const { maxLength, dataSurce } = props;
+    const { maxLength, dataSource } = props;
     let arr = _.cloneDeep(
       value
-        ? _.filter(dataSurce, (item) => {
+        ? _.filter(dataSource, (item) => {
             return item.note.indexOf(value) > -1;
           })
-        : dataSurce
+        : dataSource
     );
-    if (maxLength && !isNaN(_.parseInt(maxLength)) && dataSurce.length > _.parseInt(maxLength)) {
+    if (maxLength && !isNaN(_.parseInt(maxLength)) && dataSource.length > _.parseInt(maxLength)) {
       arr = arr.slice(0, _.parseInt(maxLength) - 1);
     }
     return arr;
@@ -127,15 +124,15 @@ export default class ModalSelect extends Component {
 
   // 传值 note
 
-  getNote = (value, dataSurce) => {
+  getNote = (value, dataSource) => {
     if (!value) {
       return '';
     }
-    if (!_.isEmpty(dataSurce)) {
+    if (!_.isEmpty(dataSource)) {
       const valueLi = value ? value.split(';') : [];
       const txtArr = [];
       for (let i = 0; i < valueLi.length; i++) {
-        const objFund = _.find(dataSurce, { ibm: parseInt(valueLi[i], 10) }) || _.find(dataSurce, { ibm: valueLi[i] }) || {};
+        const objFund = _.find(dataSource, { ibm: parseInt(valueLi[i], 10) }) || _.find(dataSource, { ibm: valueLi[i] }) || {};
         txtArr.push(objFund.note ? objFund.note : valueLi[i]);
       }
       return txtArr.length > 0 ? txtArr.join('；') : '';
@@ -187,31 +184,31 @@ export default class ModalSelect extends Component {
 
   // 选择项数组
   infoArrayCreat = (value) => {
-    const { dataSurce } = this.props;
-    if (_.isEmpty(dataSurce)) {
+    const { dataSource } = this.props;
+    if (_.isEmpty(dataSource)) {
       return [];
     }
     let newArr = [];
     if (value) {
-      dataSurce.map((item) => {
+      dataSource.map((item) => {
         if (item.note.indexOf(value) > -1) {
           newArr.push(item);
         }
         return newArr;
       });
     } else {
-      newArr = _.cloneDeep(dataSurce);
+      newArr = _.cloneDeep(dataSource);
     }
     return newArr;
   };
 
   // 筛选出可选数据
-  filterSelectData = (dataSurce, disAbleItem) => {
+  filterSelectData = (dataSource, disAbleItem) => {
     const arrs = [];
-    if (disAbleItem && dataSurce) {
-      for (let i = 0; i < dataSurce.length; i++) {
-        if (!_.includes(disAbleItem, _.toString(dataSurce[i].ibm))) {
-          arrs.push(dataSurce[i]);
+    if (disAbleItem && dataSource) {
+      for (let i = 0; i < dataSource.length; i++) {
+        if (!_.includes(disAbleItem, _.toString(dataSource[i].ibm))) {
+          arrs.push(dataSource[i]);
         }
       }
     }
@@ -220,8 +217,8 @@ export default class ModalSelect extends Component {
 
   // 全选初始化
   initFundChange(value) {
-    const { dataSurce, disAbleItem } = this.props;
-    const selectArr = this.filterSelectData(dataSurce, disAbleItem);
+    const { dataSource, disAbleItem } = this.props;
+    const selectArr = this.filterSelectData(dataSource, disAbleItem);
     if (value.length >= selectArr.length) {
       return true;
     }
@@ -230,11 +227,11 @@ export default class ModalSelect extends Component {
 
   // 全选操作
   handleSwitchChange = (value) => {
-    const { disAbleItem, dataSurce, isMulti } = this.props;
+    const { disAbleItem, dataSource, isMulti } = this.props;
     if (isMulti) {
       // 筛选出可选的
       const disArr = disAbleItem || [];
-      const selectBleArr = this.filterSelectData(dataSurce, disArr);
+      const selectBleArr = this.filterSelectData(dataSource, disArr);
       if (value.length > 0) {
         const valueArray = [];
         selectBleArr.map((item) => {
@@ -293,12 +290,12 @@ export default class ModalSelect extends Component {
 
   resetlBut = () => {
     // 重置
-    const { dataSurce, isSure, resetValue, disAbleItem } = this.props;
+    const { dataSource, isSure, resetValue, disAbleItem } = this.props;
     const newCbm = 'ibm';
     // 筛选出可选的数组
 
     const disArr = disAbleItem || [];
-    const seletAbleArr = this.filterSelectData(dataSurce, disArr);
+    const seletAbleArr = this.filterSelectData(dataSource, disArr);
 
     let value = _.isEmpty(seletAbleArr) ? [] : [`${seletAbleArr[0][newCbm]}` || ''];
     if (resetValue) {
@@ -367,7 +364,6 @@ export default class ModalSelect extends Component {
   handleChange = (e) => {
     this.setState({
       value: e.target.value,
-      infoArray: this.getNowArray(this.props, e.target.value)
     });
   };
 
@@ -379,7 +375,7 @@ export default class ModalSelect extends Component {
       modalTitle,
       itemSize,
       maxLength,
-      dataSurce,
+      dataSource,
       width,
       wrapClassName,
       afterClose,
@@ -396,19 +392,18 @@ export default class ModalSelect extends Component {
       zIndex,
       closeModal
     } = this.props;
-    const { value, changFlag, defaultItem, infoArray } = this.state;
-    const listHtml = this.ListCreateHtml(value, defaultItem, infoArray);
-    const suffix = value && value !== '-----弹框重置（reset）------' ? <span className={styles.searchClear} onClick={this.emitEmpty} /> : null;
+    const { value, changFlag, defaultItem } = this.state;
+    const listHtml = this.ListCreateHtml(value, defaultItem);
+    
 
     // 全选
-    const allHTML = <CheckboxGroup value={changFlag ? ['1'] : []} options={saveOpts} onChange={this.handleSwitchChange} className={styles.newClass} />;
+    const allHTML = <CheckboxGroup value={changFlag ? ['1'] : []} options={saveOpts} onChange={this.handleSwitchChange} />;
     // 搜索
     const searchHtml = (
       <div className={styles.searchBar}>
         <div className={styles.searchForm}>
           <Input
             placeholder="请输入搜索条件"
-            suffix={suffix}
             value={value !== '-----弹框重置（reset）------' ? value : ''}
             onChange={this.handleChange}
             ref={(node) => {
@@ -478,10 +473,10 @@ export default class ModalSelect extends Component {
                 {maxLength &&
                 !_.isNaN(_.parseInt(maxLength)) &&
                 (value
-                  ? _.filter(dataSurce, (item) => {
+                  ? _.filter(dataSource, (item) => {
                       return item.note.indexOf(value) > -1;
                     })
-                  : dataSurce
+                  : dataSource
                 ).length > _.parseInt(maxLength)
                   ? overTipHtml
                   : ''}

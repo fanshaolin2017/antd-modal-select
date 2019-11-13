@@ -48,7 +48,7 @@ class App extends Component {
       <div>
         <button type="button" onClick={this.show}>弹出</button>
         <button type="button" onClick={this.hide}>关闭</button>
-        <ModalSelect dataSurce={data} isShow={this.state.isShow} width={800} closeModal={this.closeModal} modalSure={this.modalSure} isMulti isSearch checkAll />
+        <ModalSelect dataSource={data} isShow={this.state.isShow} width={800} closeModal={this.closeModal} modalSure={this.modalSure} isMulti isSearch checkAll />
       </div>
     );
   }
