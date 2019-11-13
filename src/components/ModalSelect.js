@@ -137,8 +137,8 @@ export default class ModalSelect extends Component {
             key={item[newCbm]}
             className={`
               ${styles.stepLi}
-              ${_.includes(defaultItem, _.toString(item[newCbm])) > -1 ? styles.on : ''}
-              ${_.includes(disAbleItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
+              ${_.indexOf(defaultItem, _.toString(item[newCbm])) > -1 ? styles.on : ''}
+              ${_.indexOf(disAbleItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
             `}
             onClick={() => {
               return this.checkItem2(item);

@@ -1,6 +1,6 @@
 {
   "name": "@crm/bpc-antd-modal-select",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "lib/bundle.js",
   "scripts": {
     "start": "webpack-dev-server",
