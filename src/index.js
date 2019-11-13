@@ -9,7 +9,9 @@ class App extends Component {
     };
   }
 
-  modalSure = () => {};
+  modalSure = (value, record, key) => {
+    console.log('value,selectContent,key', value, record, key);
+  };
 
   closeModal = () => {
     this.setState({
@@ -46,9 +48,13 @@ class App extends Component {
     ];
     return (
       <div>
-        <button type="button" onClick={this.show}>弹出</button>
-        <button type="button" onClick={this.hide}>关闭</button>
-        <ModalSelect dataSource={data} isShow={this.state.isShow} width={800} closeModal={this.closeModal} modalSure={this.modalSure} isMulti isSearch checkAll />
+        <button type="button" onClick={this.show}>
+          弹出
+        </button>
+        <button type="button" onClick={this.hide}>
+          关闭
+        </button>
+        <ModalSelect dataSource={data} title="证件类别" selectCode="ibm" visible={this.state.isShow} width={800} closeModal={this.closeModal} modalSure={this.modalSure} isMulti isSearch checkAll />
       </div>
     );
   }

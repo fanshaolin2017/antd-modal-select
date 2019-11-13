@@ -23,13 +23,11 @@ export default class ModalSelect extends Component {
     checkAll: PropTypes.bool, // 可以选择全部
     isMulti: PropTypes.bool, // 可以多选
     isSearch: PropTypes.bool, // 可以搜索
-    isSure: PropTypes.bool, // 是否必选
-    modalTitle: PropTypes.string, // select 类别
+    title: PropTypes.string, // select 类别
     selectCode: PropTypes.string, // select 类别代码
-    resetValue: PropTypes.string, // 重置value
     maxLength: PropTypes.string, // 最大数据量，多的不展示
     disAbleItem: PropTypes.array, // 禁止修改的选项
-    isShow: PropTypes.bool.isRequired,
+    visible: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
     itemSize: PropTypes.string, // 选择项的大小
     width: PropTypes.number,
@@ -53,10 +51,8 @@ export default class ModalSelect extends Component {
     checkAll: false,
     isMulti: false,
     isSearch: false,
-    isSure: true,
-    modalTitle: '证件类别',
+    title: '',
     selectCode: '',
-    resetValue: '',
     maxLength: 100,
     disAbleItem: [],
     itemSize: 'normal',
@@ -78,32 +74,26 @@ export default class ModalSelect extends Component {
 
   constructor(props) {
     super(props);
-
-    const { defaultValue, dataSource } = props;
     this.state = {
       changFlag: false,
       defaultItem: [],
       value: '',
-      selectContent: this.getNote(defaultValue, dataSource),
-      newNum: parseInt(Math.random() * 1000000 + 1, 10)
     };
   }
 
   componentWillMount() {
-    const { defaultValue, dataSource } = this.props;
+    const { defaultValue } = this.props;
     this.setState({
       defaultItem: defaultValue ? defaultValue.split(';') : [],
-      changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : []),
-      selectContent: this.getNote(defaultValue, dataSource),
+      changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : [])
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { defaultValue, dataSource } = nextProps;
+    const { defaultValue } = nextProps;
     this.setState({
       defaultItem: defaultValue ? defaultValue.split(';') : [],
-      changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : []),
-      selectContent: this.getNote(defaultValue, dataSource),
+      changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : [])
     });
   }
 
@@ -124,27 +114,10 @@ export default class ModalSelect extends Component {
 
   // 传值 note
 
-  getNote = (value, dataSource) => {
-    if (!value) {
-      return '';
-    }
-    if (!_.isEmpty(dataSource)) {
-      const valueLi = value ? value.split(';') : [];
-      const txtArr = [];
-      for (let i = 0; i < valueLi.length; i++) {
-        const objFund = _.find(dataSource, { ibm: parseInt(valueLi[i], 10) }) || _.find(dataSource, { ibm: valueLi[i] }) || {};
-        txtArr.push(objFund.note ? objFund.note : valueLi[i]);
-      }
-      return txtArr.length > 0 ? txtArr.join('；') : '';
-    }
-    return '';
-  };
-
   // 选择项初始化
   ListCreateHtml = (value, defaultItem) => {
     const { selectCode, disAbleItem } = this.props;
-    const { newNum } = this.state;
-    const newCbm = 'ibm';
+    const newCbm = selectCode;
     const showInfo = this.getNowArray(this.props, value);
 
     if (_.isEmpty(showInfo)) {
@@ -160,13 +133,12 @@ export default class ModalSelect extends Component {
       if (item.note.indexOf(value) > -1) {
         country.push(
           <li
-            id={`li_${item[newCbm]}_${newNum}_${selectCode}`}
             value={item[newCbm]}
             key={item[newCbm]}
             className={`
               ${styles.stepLi}
-              ${_.indexOf(defaultItem, _.toString(item[newCbm])) > -1 ? styles.on : ''}
-              ${_.indexOf(disAbleItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
+              ${_.includes(defaultItem, _.toString(item[newCbm])) > -1 ? styles.on : ''}
+              ${_.includes(disAbleItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
             `}
             onClick={() => {
               return this.checkItem2(item);
@@ -203,11 +175,11 @@ export default class ModalSelect extends Component {
   };
 
   // 筛选出可选数据
-  filterSelectData = (dataSource, disAbleItem) => {
+  filterSelectData = (dataSource, disAbleItem, selectCode) => {
     const arrs = [];
     if (disAbleItem && dataSource) {
       for (let i = 0; i < dataSource.length; i++) {
-        if (!_.includes(disAbleItem, _.toString(dataSource[i].ibm))) {
+        if (!_.includes(disAbleItem, _.toString(dataSource[i][selectCode]))) {
           arrs.push(dataSource[i]);
         }
       }
@@ -217,8 +189,8 @@ export default class ModalSelect extends Component {
 
   // 全选初始化
   initFundChange(value) {
-    const { dataSource, disAbleItem } = this.props;
-    const selectArr = this.filterSelectData(dataSource, disAbleItem);
+    const { dataSource, disAbleItem, selectCode } = this.props;
+    const selectArr = this.filterSelectData(dataSource, disAbleItem, selectCode);
     if (value.length >= selectArr.length) {
       return true;
     }
@@ -227,15 +199,15 @@ export default class ModalSelect extends Component {
 
   // 全选操作
   handleSwitchChange = (value) => {
-    const { disAbleItem, dataSource, isMulti } = this.props;
+    const { disAbleItem, dataSource, isMulti, selectCode } = this.props;
     if (isMulti) {
       // 筛选出可选的
       const disArr = disAbleItem || [];
-      const selectBleArr = this.filterSelectData(dataSource, disArr);
+      const selectBleArr = this.filterSelectData(dataSource, disArr, selectCode);
       if (value.length > 0) {
         const valueArray = [];
         selectBleArr.map((item) => {
-          return valueArray.push(_.toString(item.ibm));
+          return valueArray.push(_.toString(item[selectCode]));
         });
 
         this.setState({
@@ -254,12 +226,12 @@ export default class ModalSelect extends Component {
   // 选择操作
   checkItem2 = (item) => {
     const { defaultItem } = this.state;
-    const { isMulti } = this.props;
-    const newCbm = 'ibm';
+    const { isMulti, selectCode } = this.props;
+    const newCbm = selectCode;
     const key = item[newCbm].toString();
     let newItem = _.cloneDeep(defaultItem);
     const index = _.indexOf(newItem, key);
-    if (isMulti) {
+    if (isMulti && !_.isEmpty(defaultItem)) {
       // 多选
       if (index > -1) {
         newItem.splice(index, 1);
@@ -286,58 +258,32 @@ export default class ModalSelect extends Component {
     return a - b;
   };
 
-  // 弹框显示
-
+  // 重置功能，清空已选值
   resetlBut = () => {
-    // 重置
-    const { dataSource, isSure, resetValue, disAbleItem } = this.props;
-    const newCbm = 'ibm';
-    // 筛选出可选的数组
-
-    const disArr = disAbleItem || [];
-    const seletAbleArr = this.filterSelectData(dataSource, disArr);
-
-    let value = _.isEmpty(seletAbleArr) ? [] : [`${seletAbleArr[0][newCbm]}` || ''];
-    if (resetValue) {
-      if (resetValue === '-999') {
-        value = [];
-      } else {
-        value = resetValue.split(';');
-      }
-    }
-    if (!isSure) {
-      value = [];
-    }
     this.setState({
-      value: '-----弹框重置（reset）------'
+      changFlag: false,
+      defaultItem: '',
+      value: ''
     });
-
-    setTimeout(() => {
-      this.setState({
-        changFlag: false,
-        defaultItem: value,
-        value: ''
-      });
-    }, 1);
   };
 
   sureBut = (e) => {
     // 确定
     e.preventDefault();
-    const { selectCode, isSure, disAbleItem } = this.props;
-    const { defaultItem, selectContent, value } = this.state;
+    const { selectCode, disAbleItem } = this.props;
+    const { defaultItem, value } = this.state;
     let newItem = defaultItem;
-    const newCbm = 'ibm';
+    const newCbm = selectCode;
 
     const disArr = disAbleItem || [];
     const newArr = this.infoArrayCreat(value);
-    if (!_.isEmpty(newArr) && newArr.length === 1 && isSure) {
+    if (!_.isEmpty(newArr) && newArr.length === 1) {
       if (!_.includes(disArr, _.toString(newArr[0][newCbm]))) {
         newItem = [_.toString(newArr[0][newCbm])];
       }
     }
 
-    this.props.modalSure(newItem, selectContent, selectCode);
+    this.props.modalSure(newItem, newArr, selectCode);
     this.props.closeModal();
     this.setState({
       value: ''
@@ -363,16 +309,16 @@ export default class ModalSelect extends Component {
 
   handleChange = (e) => {
     this.setState({
-      value: e.target.value,
+      value: e.target.value
     });
   };
 
   render() {
     const {
-      isShow,
+      visible,
       checkAll,
       isSearch,
-      modalTitle,
+      title,
       itemSize,
       maxLength,
       dataSource,
@@ -394,7 +340,6 @@ export default class ModalSelect extends Component {
     } = this.props;
     const { value, changFlag, defaultItem } = this.state;
     const listHtml = this.ListCreateHtml(value, defaultItem);
-    
 
     // 全选
     const allHTML = <CheckboxGroup value={changFlag ? ['1'] : []} options={saveOpts} onChange={this.handleSwitchChange} />;
@@ -440,7 +385,7 @@ export default class ModalSelect extends Component {
     return (
       <div>
         <Modal
-          visible={isShow}
+          visible={visible}
           footer={null}
           closable={false}
           wrapClassName={wrapClassName}
@@ -461,7 +406,7 @@ export default class ModalSelect extends Component {
         >
           <div className={styles.fundModalBox}>
             <div className={styles.modalTitle}>
-              <span>{modalTitle}</span>
+              <span>{title}</span>
               <div className={styles.modalClose} onClick={closeModal}></div>
               <div className={styles.modalSave}>{checkAll ? allHTML : ''}</div>
             </div>
