@@ -17,25 +17,23 @@ const saveOpts = [{ label: '全选', value: '1' }];
 
 export default class ModalSelect extends Component {
   static propTypes = {
-    dataSource: PropTypes.array.isRequired,
+    dataSource: PropTypes.array.isRequired, // 展示的数据源
     defaultValue: PropTypes.string, // select 传值
-    modalSure: PropTypes.func.isRequired,
-    checkAll: PropTypes.bool, // 可以选择全部
-    isMulti: PropTypes.bool, // 可以多选
-    isSearch: PropTypes.bool, // 可以搜索
-    title: PropTypes.string, // select 类别
-    selectCode: PropTypes.string, // select 类别代码
-    maxLength: PropTypes.string, // 最大数据量，多的不展示
-    disAbleItem: PropTypes.array, // 禁止修改的选项
-    visible: PropTypes.bool.isRequired,
-    closeModal: PropTypes.func.isRequired,
+    modalSure: PropTypes.func.isRequired, // 确定按钮的方法
+    checkAll: PropTypes.bool, // 是否显示全选按钮
+    isMulti: PropTypes.bool, // 是否多选
+    isSearch: PropTypes.bool, // 是否显示搜索框
+    title: PropTypes.string, // 弹窗的title
+    selectCode: PropTypes.string, // value对应的key
+    maxLength: PropTypes.number, // 可显示的最大数据量
+    disAbleItem: PropTypes.array, // 禁止选择的项
+    visible: PropTypes.bool.isRequired, // 弹窗是否显示
+    closeModal: PropTypes.func.isRequired, // 关闭弹窗的方法
     itemSize: PropTypes.string, // 选择项的大小
-    width: PropTypes.number,
+    width: PropTypes.number, // 弹窗的宽度
     wrapClassName: PropTypes.string,
-    afterClose: PropTypes.func,
     bodyStyle: PropTypes.object,
     centered: PropTypes.bool,
-    closeIcon: PropTypes.object,
     destroyOnClose: PropTypes.bool,
     forceRender: PropTypes.bool,
     keyboard: PropTypes.bool,
@@ -58,26 +56,24 @@ export default class ModalSelect extends Component {
     itemSize: 'normal',
     width: 600,
     wrapClassName: '',
-    closeIcon: {},
     centered: false,
     style: {},
     maskStyle: {},
     bodyStyle: {},
     mask: true,
     maskClosable: true,
-    keyboard: false,
-    zIndex: 9,
+    keyboard: true,
+    zIndex: 1000,
     forceRender: false,
     destroyOnClose: false,
-    afterClose: () => {}
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      changFlag: false,
-      defaultItem: [],
-      value: '',
+      changFlag: false, // 是否全选 默认不全选
+      defaultItem: [], // 默认值选中的项
+      value: '', // 搜索框的value
     };
   }
 
@@ -96,8 +92,10 @@ export default class ModalSelect extends Component {
       changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : [])
     });
   }
-
-  getNowArray(props, value) {
+  
+  
+  // 根据maxLength和搜索框的内容过滤dataSource
+  getNowArray=(props, value) => {
     const { maxLength, dataSource } = props;
     let arr = _.cloneDeep(
       value
@@ -112,9 +110,7 @@ export default class ModalSelect extends Component {
     return arr;
   }
 
-  // 传值 note
-
-  // 选择项初始化
+  // 选择项初始化 渲染选择项
   ListCreateHtml = (value, defaultItem) => {
     const { selectCode, disAbleItem } = this.props;
     const newCbm = selectCode;
@@ -141,7 +137,7 @@ export default class ModalSelect extends Component {
               ${_.indexOf(disAbleItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
             `}
             onClick={() => {
-              return this.checkItem2(item);
+              return this.checkItem(item);
             }}
           >
             <span>{item.note}</span>
@@ -174,7 +170,7 @@ export default class ModalSelect extends Component {
     return newArr;
   };
 
-  // 筛选出可选数据
+  // 根据不可选数据筛选出可选数据
   filterSelectData = (dataSource, disAbleItem, selectCode) => {
     const arrs = [];
     if (disAbleItem && dataSource) {
@@ -187,7 +183,7 @@ export default class ModalSelect extends Component {
     return arrs;
   };
 
-  // 全选初始化
+  // 判断全选按钮是否选中
   initFundChange(value) {
     const { dataSource, disAbleItem, selectCode } = this.props;
     const selectArr = this.filterSelectData(dataSource, disAbleItem, selectCode);
@@ -224,7 +220,7 @@ export default class ModalSelect extends Component {
   };
 
   // 选择操作
-  checkItem2 = (item) => {
+  checkItem = (item) => {
     const { defaultItem } = this.state;
     const { isMulti, selectCode } = this.props;
     const newCbm = selectCode;
@@ -324,10 +320,8 @@ export default class ModalSelect extends Component {
       dataSource,
       width,
       wrapClassName,
-      afterClose,
       bodyStyle,
       centered,
-      closeIcon,
       destroyOnClose,
       forceRender,
       keyboard,
@@ -391,10 +385,8 @@ export default class ModalSelect extends Component {
           wrapClassName={wrapClassName}
           onCancel={this.props.closeModal}
           width={width}
-          afterClose={afterClose}
           bodyStyle={bodyStyle}
           centered={centered}
-          closeIcon={closeIcon}
           destroyOnClose={destroyOnClose}
           forceRender={forceRender}
           keyboard={keyboard}

@@ -28,7 +28,7 @@ npm install 或者 yarn install
       }
     ];
 
- <ModalSelect 
+ <AntdModalSelect 
     dataSource={data} 
     isShow={this.state.isShow} 
     closeModal={this.closeModal} 
@@ -52,5 +52,13 @@ checkAll | 是否显示全选按钮 | Boolean | false | N
 isMulti | 是否支持多选 | Boolean | false | N
 isSearch | 是否显示搜索框 | Boolean | false | N
 disAbleItem | 禁止选中的项([value1, value2, ...]) | String[] | [] | N
-
-其他Modal属性参照 antd Modal属性使用
+wrapClassName | 对话框外层容器的类名 | string | 无 | N
+bodyStyle | Modal body 样式 | object | {} | N
+centered | 对话框外层容器的类名 | string | 无 | N
+forceRender | forceRender | Boolean | false | N
+keyboard | 是否支持键盘 esc 关闭 | Boolean | true | N
+mask | 是否展示遮罩 | Boolean | true | N
+maskClosable | 点击蒙层是否允许关闭 | Boolean | true | N
+maskStyle | 遮罩样式 | object | {} | N
+style | 可用于设置浮层的样式，调整浮层位置等 | object | {} | N
+zIndex | 设置组件的 z-index | Number | 1000 | N
