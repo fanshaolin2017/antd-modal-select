@@ -44,18 +44,6 @@ class App extends Component {
       {
         ibm: 3,
         note: '世界3'
-      },
-      {
-        ibm: 4,
-        note: '世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434'
-      },
-      {
-        ibm: 5,
-        note: '世界5'
-      },
-      {
-        ibm: 6,
-        note: '世界6'
       }
     ];
     return (
@@ -68,17 +56,21 @@ class App extends Component {
         </button>
         <ModalSelect
           dataSource={data}
+          defaultValue="3"
           title="证件类别"
-          valueKey="ibm"
+          valueKey={{
+            id: 'ibm',
+            note: 'note'
+          }}
           visible={this.state.isShow}
           width={1000}
           closeModal={this.closeModal}
           modalSure={this.modalSure}
-          isMulti
-          isSearch
-          checkAll
-          disableItem={["1", "2"]}
-          itemSize="superlarge"
+          isMultil
+          hasSearch
+          hasCheckAll
+          disableItem={['1']}
+          itemSize="small"
         />
       </div>
     );
