@@ -44,6 +44,18 @@ class App extends Component {
       {
         ibm: 3,
         note: '世界3'
+      },
+      {
+        ibm: 4,
+        note: '世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434世界3世界世界世界世界3434'
+      },
+      {
+        ibm: 5,
+        note: '世界5'
+      },
+      {
+        ibm: 6,
+        note: '世界6'
       }
     ];
     return (
@@ -57,14 +69,16 @@ class App extends Component {
         <ModalSelect
           dataSource={data}
           title="证件类别"
-          selectCode="ibm"
+          valueKey="ibm"
           visible={this.state.isShow}
-          width={800}
+          width={1000}
           closeModal={this.closeModal}
           modalSure={this.modalSure}
           isMulti
           isSearch
           checkAll
+          disableItem={["1", "2"]}
+          itemSize="superlarge"
         />
       </div>
     );

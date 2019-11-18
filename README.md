@@ -42,16 +42,17 @@ npm install 或者 yarn install
 visible | 控制组件的显示与隐藏 | Boolean | false | Y
 dataSource | 数据数组 | any[] |  [] | Y
 defaultValue | 默认值 多选时以(,)分隔 | String | 空值 | Y 
-selectCode | value对应的key值 | String | false | Y
+valueKey | value对应的key值 | String | false | Y
 closeModal | 关闭弹窗的回调 | function | 无 | Y
 modalSure | 点击确定按钮的方法 | function(value, record, index) {} | false | Y
 width | 弹窗的宽度 | number | 600 | N
-itemSize | 每个可选数据的样式大小，可选范围（normal, large, superLarge） | String |  N
+itemSize | 每个可选数据的样式大小，可选范围（small, normal, large, superlarge） | String |  N
 maxLength | 可显示的最大数据条数，大于此值的其它数据不显示，但是可以通过搜索框模糊查询 | Number | 100 | N
 checkAll | 是否显示全选按钮 | Boolean | false | N
 isMulti | 是否支持多选 | Boolean | false | N
 isSearch | 是否显示搜索框 | Boolean | false | N
-disAbleItem | 禁止选中的项([value1, value2, ...]) | String[] | [] | N
+destroyOnClose | 关闭时销毁弹窗里的子元素 | Boolean | false | N
+disableItem | 禁止选中的项([value1, value2, ...]) | String[] | [] | N
 wrapClassName | 对话框外层容器的类名 | string | 无 | N
 bodyStyle | Modal body 样式 | object | {} | N
 centered | 对话框外层容器的类名 | string | 无 | N
@@ -62,3 +63,5 @@ maskClosable | 点击蒙层是否允许关闭 | Boolean | true | N
 maskStyle | 遮罩样式 | object | {} | N
 style | 可用于设置浮层的样式，调整浮层位置等 | object | {} | N
 zIndex | 设置组件的 z-index | Number | 1000 | N
+
+

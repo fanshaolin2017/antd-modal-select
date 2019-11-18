@@ -24,9 +24,9 @@ export default class ModalSelect extends Component {
     isMulti: PropTypes.bool, // 是否多选
     isSearch: PropTypes.bool, // 是否显示搜索框
     title: PropTypes.string, // 弹窗的title
-    selectCode: PropTypes.string, // value对应的key
+    valueKey: PropTypes.string, // value对应的key
     maxLength: PropTypes.number, // 可显示的最大数据量
-    disAbleItem: PropTypes.array, // 禁止选择的项
+    disableItem: PropTypes.array, // 禁止选择的项
     visible: PropTypes.bool.isRequired, // 弹窗是否显示
     closeModal: PropTypes.func.isRequired, // 关闭弹窗的方法
     itemSize: PropTypes.string, // 选择项的大小
@@ -50,11 +50,11 @@ export default class ModalSelect extends Component {
     isMulti: false,
     isSearch: false,
     title: '',
-    selectCode: '',
+    valueKey: '',
     maxLength: 100,
-    disAbleItem: [],
-    itemSize: 'normal',
-    width: 600,
+    disableItem: [],
+    itemSize: 'small',
+    width: 800,
     wrapClassName: '',
     centered: false,
     style: {},
@@ -65,7 +65,7 @@ export default class ModalSelect extends Component {
     keyboard: true,
     zIndex: 1000,
     forceRender: false,
-    destroyOnClose: false,
+    destroyOnClose: false
   };
 
   constructor(props) {
@@ -73,7 +73,7 @@ export default class ModalSelect extends Component {
     this.state = {
       changFlag: false, // 是否全选 默认不全选
       defaultItem: [], // 默认值选中的项
-      value: '', // 搜索框的value
+      value: '' // 搜索框的value
     };
   }
 
@@ -92,10 +92,9 @@ export default class ModalSelect extends Component {
       changFlag: this.initFundChange(defaultValue ? defaultValue.split(';') : [])
     });
   }
-  
-  
+
   // 根据maxLength和搜索框的内容过滤dataSource
-  getNowArray=(props, value) => {
+  getNowArray = (props, value) => {
     const { maxLength, dataSource } = props;
     let arr = _.cloneDeep(
       value
@@ -108,18 +107,36 @@ export default class ModalSelect extends Component {
       arr = arr.slice(0, _.parseInt(maxLength) - 1);
     }
     return arr;
-  }
+  };
 
   // 选择项初始化 渲染选择项
   ListCreateHtml = (value, defaultItem) => {
-    const { selectCode, disAbleItem } = this.props;
-    const newCbm = selectCode;
+    const { valueKey, disableItem, itemSize } = this.props;
+    const newCbm = valueKey;
     const showInfo = this.getNowArray(this.props, value);
-
+    let menuStyle = itemSize;
+    switch (itemSize) {
+      // case 'superLarge':
+      //   menuStyle = styles.bigClass2;
+      //   break;
+      case 'small':
+        menuStyle = styles.smallStyle;
+        break;
+      case 'normal':
+        menuStyle = styles.normalStyle;
+        break;
+      case 'large':
+        menuStyle = styles.largeStyle;
+        break;
+      case 'superlarge':
+        menuStyle = styles.superLargeStyle;
+        break;
+      default:
+        menuStyle = styles.smallStyle;
+    }
     if (_.isEmpty(showInfo)) {
       return (
-        <li key="noKey" className={styles.stepLi}>
-          <span>无</span>
+        <li key="noKey" className={`${styles.stepLi} ${menuStyle}`}>
           <i className={styles.stepYes} />
         </li>
       );
@@ -132,15 +149,15 @@ export default class ModalSelect extends Component {
             value={item[newCbm]}
             key={item[newCbm]}
             className={`
-              ${styles.stepLi}
+              ${styles.stepLi} ${menuStyle}
               ${_.indexOf(defaultItem, _.toString(item[newCbm])) > -1 ? styles.on : ''}
-              ${_.indexOf(disAbleItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
+              ${_.indexOf(disableItem, _.toString(item[newCbm])) > -1 ? styles.disChange : ''}
             `}
             onClick={() => {
               return this.checkItem(item);
             }}
           >
-            <span>{item.note}</span>
+            {item.note}
             <i className={styles.stepYes} />
           </li>
         );
@@ -171,11 +188,11 @@ export default class ModalSelect extends Component {
   };
 
   // 根据不可选数据筛选出可选数据
-  filterSelectData = (dataSource, disAbleItem, selectCode) => {
+  filterSelectData = (dataSource, disableItem, valueKey) => {
     const arrs = [];
-    if (disAbleItem && dataSource) {
+    if (disableItem && dataSource) {
       for (let i = 0; i < dataSource.length; i++) {
-        if (!_.includes(disAbleItem, _.toString(dataSource[i][selectCode]))) {
+        if (!_.includes(disableItem, _.toString(dataSource[i][valueKey]))) {
           arrs.push(dataSource[i]);
         }
       }
@@ -185,8 +202,8 @@ export default class ModalSelect extends Component {
 
   // 判断全选按钮是否选中
   initFundChange(value) {
-    const { dataSource, disAbleItem, selectCode } = this.props;
-    const selectArr = this.filterSelectData(dataSource, disAbleItem, selectCode);
+    const { dataSource, disableItem, valueKey } = this.props;
+    const selectArr = this.filterSelectData(dataSource, disableItem, valueKey);
     if (value.length >= selectArr.length) {
       return true;
     }
@@ -195,15 +212,15 @@ export default class ModalSelect extends Component {
 
   // 全选操作
   handleSwitchChange = (value) => {
-    const { disAbleItem, dataSource, isMulti, selectCode } = this.props;
+    const { disableItem, dataSource, isMulti, valueKey } = this.props;
     if (isMulti) {
       // 筛选出可选的
-      const disArr = disAbleItem || [];
-      const selectBleArr = this.filterSelectData(dataSource, disArr, selectCode);
+      const disArr = disableItem || [];
+      const selectBleArr = this.filterSelectData(dataSource, disArr, valueKey);
       if (value.length > 0) {
         const valueArray = [];
         selectBleArr.map((item) => {
-          return valueArray.push(_.toString(item[selectCode]));
+          return valueArray.push(_.toString(item[valueKey]));
         });
 
         this.setState({
@@ -222,8 +239,8 @@ export default class ModalSelect extends Component {
   // 选择操作
   checkItem = (item) => {
     const { defaultItem } = this.state;
-    const { isMulti, selectCode } = this.props;
-    const newCbm = selectCode;
+    const { isMulti, valueKey } = this.props;
+    const newCbm = valueKey;
     const key = item[newCbm].toString();
     let newItem = _.cloneDeep(defaultItem);
     const index = _.indexOf(newItem, key);
@@ -266,12 +283,12 @@ export default class ModalSelect extends Component {
   sureBut = (e) => {
     // 确定
     e.preventDefault();
-    const { selectCode, disAbleItem } = this.props;
+    const { valueKey, disableItem } = this.props;
     const { defaultItem, value } = this.state;
     let newItem = defaultItem;
-    const newCbm = selectCode;
+    const newCbm = valueKey;
 
-    const disArr = disAbleItem || [];
+    const disArr = disableItem || [];
     const newArr = this.infoArrayCreat(value);
     if (!_.isEmpty(newArr) && newArr.length === 1) {
       if (!_.includes(disArr, _.toString(newArr[0][newCbm]))) {
@@ -279,7 +296,7 @@ export default class ModalSelect extends Component {
       }
     }
 
-    this.props.modalSure(newItem, newArr, selectCode);
+    this.props.modalSure(newItem, newArr, valueKey);
     this.props.closeModal();
     this.setState({
       value: ''
@@ -315,7 +332,6 @@ export default class ModalSelect extends Component {
       checkAll,
       isSearch,
       title,
-      itemSize,
       maxLength,
       dataSource,
       width,
@@ -334,7 +350,7 @@ export default class ModalSelect extends Component {
     } = this.props;
     const { value, changFlag, defaultItem } = this.state;
     const listHtml = this.ListCreateHtml(value, defaultItem);
-
+    const suffix = value && value !== '-----弹框重置（reset）------' ? <span className={styles.searchClear} onClick={this.emitEmpty} /> : <span />;
     // 全选
     const allHTML = <CheckboxGroup value={changFlag ? ['1'] : []} options={saveOpts} onChange={this.handleSwitchChange} />;
     // 搜索
@@ -348,6 +364,7 @@ export default class ModalSelect extends Component {
             ref={(node) => {
               this.searchInput = node;
             }}
+            suffix={suffix}
             maxLength="20"
           />
         </div>
@@ -361,21 +378,6 @@ export default class ModalSelect extends Component {
       </div>
     );
 
-    let menuStyle = '';
-    switch (itemSize) {
-      case 'large':
-        menuStyle = styles.bigClass;
-        break;
-      case 'superLarge':
-        menuStyle = styles.bigClass2;
-        break;
-      case 'normal':
-        menuStyle = styles.selfClass;
-        break;
-
-      default:
-        menuStyle = '';
-    }
     return (
       <div>
         <Modal
@@ -417,7 +419,7 @@ export default class ModalSelect extends Component {
                 ).length > _.parseInt(maxLength)
                   ? overTipHtml
                   : ''}
-                <div className={`${styles.fundUlBox} ${styles.selectUlBox} ${menuStyle}`}>
+                <div className={`${styles.fundUlBox} ${styles.selectUlBox}`}>
                   <ul className={styles.stepUl}>
                     <li id="top" />
                     {listHtml}

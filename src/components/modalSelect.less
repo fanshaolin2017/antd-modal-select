@@ -138,25 +138,15 @@
         position: relative;
         float: left;
         margin: 0 15px 10px 0;
-        width: 130px;
-        height: 50px;
+        padding:0 4px;
+        line-height: 50px;
         font-size: 16px;
         color: #666;
         text-align: center;
         border: none;
         border-radius: 6px;
         background-color: #f3f3f3;
-        box-sizing: border-box;
-        overflow: hidden;
-
-        span {
-          display: table-cell;
-          vertical-align: middle;
-          white-space: normal;
-          width: 100%;
-          line-height: 50px;
-        }
-
+        
         .stepYes {
           position: absolute;
           display: none;
@@ -186,6 +176,23 @@
           pointer-events: none;
         }
       }
+      .smallStyle{
+        width: 18%;
+        overflow: hidden;
+      }
+      .normalStyle {
+        width: 23%;
+        overflow: hidden;
+      }
+      .largeStyle {
+        width:48%;
+        overflow: hidden;
+      }
+      .superLargeStyle {
+        padding:8px;
+        width:98%;
+        line-height: 30px;
+      }
     }
 
     &.selectUlBox {
@@ -194,57 +201,6 @@
       .tiptext {
         font-size: 16px;
         color: #faad14,
-      }
-    }
-
-    &.bigClass {
-      .stepUl {
-        .stepLi {
-          width: 400px;
-          height: 60px;
-        }
-      }
-    }
-
-    &.cpkhClass {
-      .stepUl {
-        .stepLi {
-          width: 400px;
-          height: 60px;
-        }
-      }
-    }
-
-    &.bigClass2 {
-      .stepUl {
-        .stepLi {
-          width: 625px;
-          height: 60px;
-        }
-      }
-    }
-
-    &.selfClass {
-      .stepUl {
-        .stepLi {
-          display: inline-block;
-          height: auto;
-
-          span {
-            display: block;
-          }
-        }
-      }
-    }
-
-    &.moreBigClass {
-      max-height: 700px;
-
-      .stepUl {
-        .stepLi {
-          width: 625px;
-          height: 60px;
-        }
       }
     }
   }
@@ -258,12 +214,13 @@
 
     .butt {
       width: 50%;
-      height: 45px;
-      line-height: 45px;
+      height: 50px;
+      line-height: 50px;
       font-size: 16px;
       color: #c5342a;
       border: none;
       background-color: #fff;
+      border-radius: 0;
 
       &:active {
         border: none;
